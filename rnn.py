@@ -38,4 +38,8 @@ regressor.add(Dropout(0.2))
 regressor.add(LSTM(units = 50))
 regressor.add(Dropout(0.2))
 
+
 regressor.add(Dense(units = 1))
+
+#compiling the RNN code
+regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
