@@ -43,3 +43,15 @@ regressor.add(Dense(units = 1))
 
 #compiling the RNN code
 regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
+
+#Model fitting code
+regressor.fit(x_train,y_train,epochs=100, batch_size=32)
+
+dataset_test = pd.read_csv('Google_Stock_Price_Test.csv')
+real_stock_price = dataset_test.iloc[:,1:2].values
+
+dataset_total = pd.concat((dataset_train['Open'],dataset_test['Open']), axis =0)
+inputs = dataset_total[len(dataset_total)-len(dataset_test)- 60:].values
+inputs = inputs.reshape(-1,1)
+inputs = sc.transform(inputs)
+
