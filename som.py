@@ -40,6 +40,15 @@ for i,x in enumerate(X):
   plot(w[0]+ 0.5, w[1]+ 0.5, markers[y[i]], markeredgecolor= colors[y[i]],markerfacecolor='None', markersize = 10, markeredgewidth = 2 )
 show()
 
+#Detect data sets for fraud/outliers
+mappings = som.win_map(X) 
+frauds = np.concatenate((mappings[(4,4)], mappings[(5,2)]), axis =0)
+#Inverse scaling
+frauds = sc.inverse_transform(frauds)
+
+#the frauds object contain multiple lists of customers who somehow misrepresented their credit card application.
+# frauds object can be inspected further to drill down the actula customer ids.
+
 
 
 
