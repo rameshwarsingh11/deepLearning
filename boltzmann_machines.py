@@ -41,7 +41,7 @@ test_set = convert(test_set)
 training_set = torch.FloatTensor(training_set)
 test_set  = torch.FloatTensor(test_set)
 
-# Data convervion to Torch tensors
+# Data conversion to Torch tensors
 training_set = torch.FloatTensor(training_set)
 test_set = torch.FloatTensor(test_set)
 
@@ -55,4 +55,21 @@ test_set[test_set == 0] = -1
 test_set[test_set == 1] = 0
 test_set[test_set == 2] = 0
 test_set[test_set >= 3] = 1
+
+#Adding neural network structure for Restricted Boltzmann Machine
+class RBM():
+  def __init__(self,nv,nh):
+    self.W = torch.randn(nh,nv)
+    self.a = torch.randn(1, nh) #1 is added to make it 2D strcuture.
+    self.b = torch.randn(1,nv)
+
+
+  #sampling the hidden nodes accounding to the probability of nh and nv using sigmoid activation function
+  def sample_h(self, x):
+    wx = torch.mm(x, self.W.t())
+    activation = wx + self.a.expand_as(wx)
+    p_h_given_v = torch.sigmoid(activation)
+    return p_h_given_v, torch.bernoulli(p_h_given_v)
+
+
 
