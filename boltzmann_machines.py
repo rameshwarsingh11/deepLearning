@@ -88,7 +88,7 @@ class RBM():
     self.a += torch.sum((ph0-phk),0)
 
 nv = len(training_set[0])
-nh = 100 #nh: number of hidden nodes calculating numbr of features.
+nh = 100 #nh: number of hidden nodes calculating number of features.
 batch_size = 100
 
 rbm = RBM(nh,nv)
@@ -109,7 +109,7 @@ for epoch in range(1, nb_epoch+1):
     for k in range(10): # k-steps in the Contrastive Divergence
       _,hk = rbm.sample_h(vk)
       _,vk = rbm.sample_v(hk)
-      #vk[v0<0] = v0[v0<0] # No need to count where user hasn't rated the movie
+      vk[v0<0] = v0[v0<0] # No need to count where user hasn't rated the movie
     
     phk,_ = rbm.sample_h(vk)
     rbm.train(v0,vk,ph0,phk)# Training will adjust the weights to update the biases
@@ -117,3 +117,18 @@ for epoch in range(1, nb_epoch+1):
     s +=1.
   print('epoch: '+str(epoch)+' loss: '+str(train_loss/s))# train_loss/s will normalize the train_loss
 
+# Testing the RBM machine code
+test_loss = 0
+s = 0.
+
+for id_user in range(nb_users):
+  v = training_set[id_user:id_user+1]
+  vt = test_set[id_user:id_user+1]
+
+  if len(vt[vt>=0]) > 0:
+    _,h = rbm.sample_h(v)
+    _,v = rbm.sample_v(h)
+    train_loss += torch.mean(torch.abs(vt[vt>=0]-v[v0>=0])) # Applying error
+    s +=1.
+print('test loss: '+str(test_loss/s))
+  
